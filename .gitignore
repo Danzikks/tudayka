@@ -1,0 +1,6 @@
+.env
+vendor/
+.DS_Store
+bot.php
+*.log
+logo.png

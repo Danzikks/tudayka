@@ -1,0 +1,17 @@
+{
+    "name": "daniilprusakov/tudayka_bot",
+    "autoload": {
+        "psr-4": {
+            "Daniilprusakov\\TudaykaBot\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Daniil Prusakov",
+            "email": "denoman1233@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
