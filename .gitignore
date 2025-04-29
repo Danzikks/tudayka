@@ -4,3 +4,4 @@ vendor/
 bot.php
 *.log
 logo.png
+.idea
