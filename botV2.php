@@ -63,7 +63,6 @@ while (true) {
 
     $response = file_get_contents("$apiUrl/getUpdates?" . http_build_query($params));
     $update = json_decode($response, true);
-    // var_dump($update);
 
 
 
@@ -138,9 +137,6 @@ while (true) {
                 'chat_id' => $chat->getChatId()
             ]);
             $user_all_event = $stmt->fetchAll(PDO::FETCH_COLUMN);
-            var_dump($user_all_event);
-            // $send_all_event = implode("\n", $user_all_event);
-            // $chat->sendMessage($send_all_event);
             $result_formatting = "";
             foreach ($user_all_event as $key => $value) {
                 $result_formatting .= $key + 1 . ") " . $value . "\n";
