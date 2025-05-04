@@ -1,15 +1,15 @@
 <?php
-
+declare(strict_types=1);
 class Chat
 {
-    private $username;
-    private $chat_id;
-    private $first_name;
-    private $last_name;
-    private $date_message;
-    private $text_message;
-    private $apiUrl;
-    private $UpdateId;
+    private string $username;
+    private int $chat_id;
+    private string|null $first_name;
+    private string|null $last_name;
+    private int $date_message;
+    private string $text_message;
+    private string $apiUrl;
+    private int $UpdateId;
 
     public function __construct(
         string $username,
@@ -31,7 +31,7 @@ class Chat
         $this->UpdateId = $UpdateId;
     }
 
-    function sendMessage($message)
+    function sendMessage($message): void
     {
 
         $params = [
@@ -40,7 +40,7 @@ class Chat
             'parse_mode' => 'html'
         ];
 
-        return file_get_contents($this->apiUrl . "/sendMessage?" . http_build_query($params));
+        file_get_contents($this->apiUrl . "/sendMessage?" . http_build_query($params));
     }
 
 
@@ -48,7 +48,7 @@ class Chat
     /**
      * Получите значение имени пользователя
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -57,7 +57,7 @@ class Chat
     /**
      * Получите значение chat_id
      */
-    public function getChatId()
+    public function getChatId(): int
     {
         return $this->chat_id;
     }
@@ -66,7 +66,7 @@ class Chat
     /**
      * Получите значение first_name
      */
-    public function getFirstName()
+    public function getFirstName(): ?string
     {
         return $this->first_name;
     }
@@ -75,7 +75,7 @@ class Chat
     /**
      * Получите значение last_name
      */
-    public function getLastName()
+    public function getLastName(): ?string
     {
         return $this->last_name;
     }
@@ -84,7 +84,7 @@ class Chat
     /**
      * Получите значение date_message
      */
-    public function getDateMessage()
+    public function getDateMessage(): int
     {
         return $this->date_message;
     }
@@ -93,7 +93,7 @@ class Chat
     /**
      * Получите значение text_message
      */
-    public function getTextMessage()
+    public function getTextMessage(): string
     {
         return $this->text_message;
     }
@@ -112,7 +112,7 @@ class Chat
     /**
      * Получить значение UpdateId
      */
-    public function getUpdateId()
+    public function getUpdateId(): int
     {
         return $this->UpdateId;
     }

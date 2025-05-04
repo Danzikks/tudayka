@@ -103,6 +103,8 @@ while (true) {
 
 
 
+
+
         if ($user["waiting_for_event"] == true) {
             if ($chat->getTextMessage() != "/add_event") {
                 $stmt = $pdo->prepare($sql_insert_message);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 $host = $_ENV['DB_HOST'];     
 $dbname = $_ENV['DB_NAME'];  
@@ -15,7 +16,7 @@ try {
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]
     );
-    echo "Подключение успешно установлено к БД";
+    echo "Подключение успешно установлено к БД\n";
 } catch(PDOException $e) {
     die("Ошибка подключения: " . $e->getMessage());
 }
