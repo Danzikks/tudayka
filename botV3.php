@@ -56,32 +56,26 @@ header('Content-Type: application/json');
 
 $request = file_get_contents('php://input');
 
-$update = json_decode($request, true);
-
-// $fp = file_put_contents('request.log', $request);
-
-foreach ($update["result"] as $item) {
+$update = json_decode($request,true);
+var_dump($update);
+ $fp = file_put_contents('request.log', $request);
 
     $chat = new Chat(
-        $item["message"]["from"]["username"],
-        $item["message"]["chat"]["id"],
-        $item["message"]["from"]["first_name"] ?? null,
-        $item["message"]["from"]["last_name"] ?? null,
-        $item["message"]["date"],
-        $item["message"]["text"],
+        $update["message"]["from"]["username"],
+        $update["message"]["chat"]["id"],
+        $update["message"]["from"]["first_name"] ?? null,
+        $update["message"]["from"]["last_name"] ?? null,
+        $update["message"]["date"],
+        $update["message"]["text"],
         $apiUrl,
-        $item["update_id"]
+        $update["update_id"]
     );
 
     $lastUpdateId = $chat->getUpdateId();
 
-
-
-
     $stmt = $pdo->prepare($sql_search_chat_id);
     $stmt->execute([$chat->getChatId()]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
 
     if ($user == false) {
         $stmt = $pdo->prepare($sql_insert_chat_id);
@@ -137,4 +131,3 @@ foreach ($update["result"] as $item) {
     } else {
         $chat->sendMessage("Если хочешь добавить событие, то напиши /add_event");
     }
-}
