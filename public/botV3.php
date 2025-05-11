@@ -1,11 +1,14 @@
 <?php
 declare(strict_types=1);
-require_once __DIR__ . '/vendor/autoload.php';
+
+use Daniilprusakov\TudaykaBot\Chat;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeload();
 
 include_once("database.php");
-include_once("chat.php");
+
 
 
 $token = $_ENV['BOT_TOKEN'];

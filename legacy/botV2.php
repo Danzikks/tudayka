@@ -1,11 +1,13 @@
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php';
+use Daniilprusakov\TudaykaBot\Chat;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeload();
 
-include_once("database.php");
-include_once("chat.php");
+include_once("../database.php");
+include_once("../Chat.php");
 
 
 $token = $_ENV['BOT_TOKEN'];
@@ -61,14 +63,16 @@ while (true) {
         "timeout" => 25
     ];
 
+    echo date('Y-m-d H:i:s').PHP_EOL;
     $response = file_get_contents("$apiUrl/getUpdates?" . http_build_query($params));
+    echo date('Y-m-d H:i:s').PHP_EOL;
     $update = json_decode($response, true);
 
 
 
 
     foreach ($update["result"] as $item) {
-        
+
         $chat = new Chat(
             $item["message"]["from"]["username"],
             $item["message"]["chat"]["id"],

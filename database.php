@@ -16,7 +16,7 @@ try {
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]
     );
-    echo "Подключение успешно установлено к БД\n";
+    var_dump("Подключение успешно установлено к БД\n");
 } catch(PDOException $e) {
     die("Ошибка подключения: " . $e->getMessage());
 }
