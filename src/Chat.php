@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace Daniilprusakov\TudaykaBot;
+
+
 class Chat
 {
     private string $username;
@@ -9,7 +11,6 @@ class Chat
     private string|null $last_name;
     private int $date_message;
     private string $text_message;
-    private string $apiUrl;
     private int $UpdateId;
 
     public function __construct(
@@ -19,7 +20,6 @@ class Chat
         ?string $last_name,
         int     $date_message,
         string  $text_message,
-        string  $apiUrl,
         int     $UpdateId
     )
     {
@@ -29,22 +29,8 @@ class Chat
         $this->last_name = $last_name;
         $this->date_message = $date_message;
         $this->text_message = $text_message;
-        $this->apiUrl = $apiUrl;
         $this->UpdateId = $UpdateId;
     }
-
-    function sendMessage($message): void
-    {
-
-        $params = [
-            'chat_id' => $this->getChatId(),
-            'text' => $message,
-            'parse_mode' => 'html'
-        ];
-
-        file_get_contents($this->apiUrl . "/sendMessage?" . http_build_query($params));
-    }
-
 
     /**
      * Получите значение имени пользователя

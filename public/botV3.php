@@ -1,18 +1,11 @@
 <?php
 declare(strict_types=1);
 
-use Daniilprusakov\TudaykaBot\Chat;
-
 require_once __DIR__ . '/../vendor/autoload.php';
+include_once("../database.php");
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeload();
 
-include_once("database.php");
-
-
-
-$token = $_ENV['BOT_TOKEN'];
-$apiUrl = "https://api.telegram.org/bot$token";
 
 
 
@@ -25,9 +18,6 @@ TEXT;
 $commandAddEvent = <<<TEXT
 Какое событие добавляем?
 TEXT;
-
-$sendMessageUrl = "$apiUrl/sendMessage?";
-$chat_id = "";
 
 
 $sql_search_chat_id = "SELECT * FROM chats WHERE chat_id = ?";
@@ -55,6 +45,9 @@ $sql_check_event_the_day = "
     AND created_at >= CURRENT_DATE
 ";
 
+
+
+
 header('Content-Type: application/json');
 
 $request = file_get_contents('php://input');
@@ -62,14 +55,17 @@ $request = file_get_contents('php://input');
 $update = json_decode($request,true);
 //$fp = file_put_contents('request.log', $request);
 
-$chat = new Chat(
+$token = $_ENV['BOT_TOKEN'];
+$requestApi = new \Daniilprusakov\TudaykaBot\RequestTelegram($token);
+
+
+$chat = new \Daniilprusakov\TudaykaBot\Chat(
     $update["message"]["from"]["username"],
     $update["message"]["chat"]["id"],
     $update["message"]["from"]["first_name"] ?? null,
     $update["message"]["from"]["last_name"] ?? null,
     $update["message"]["date"],
     $update["message"]["text"],
-    $apiUrl,
     $update["update_id"]
 );
 
@@ -104,14 +100,14 @@ if ($user["waiting_for_event"] == true) {
             'chat_id' => $chat->getChatId(),
             'now_event' => 1
         ]);
-        $chat->sendMessage("Записал!📝");
+        $requestApi->sendMessage($chat->getChatId(),"Записал!📝");
     } else {
-        $chat->sendMessage("Да-да, я уже записываю📝");
+        $requestApi->sendMessage($chat->getChatId(),"Да-да, я уже записываю📝");
     }
 } elseif ($chat->getTextMessage() == "/start") {
-    $chat->sendMessage($commandStartText);
+    $requestApi->sendMessage($chat->getChatId(),$commandStartText);
 } elseif ($chat->getTextMessage() == "/add_event") {
-    $chat->sendMessage($commandAddEvent);
+    $requestApi->sendMessage($chat->getChatId(),$commandAddEvent);
     $stmt = $pdo->prepare($sql_update_event_chat_id);
     $stmt->execute([
         'update_event' => 1,
@@ -128,7 +124,7 @@ if ($user["waiting_for_event"] == true) {
     foreach ($user_all_event as $key => $value) {
         $result_formatting .= $key + 1 . ") " . $value . "\n";
     }
-    $chat->sendMessage("<b>Итоги дня:</b>\n$result_formatting");
+    $requestApi->sendMessage($chat->getChatId(),"<b>Итоги дня:</b>\n$result_formatting");
 } else {
-    $chat->sendMessage("Если хочешь добавить событие, то напиши /add_event");
+    $requestApi->sendMessage($chat->getChatId(), "Если хочешь добавить событие, то напиши /add_event");
 }
