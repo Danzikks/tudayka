@@ -69,7 +69,7 @@ $chat = new \Daniilprusakov\TudaykaBot\Chat(
     $update["update_id"]
 );
 
-
+$pdo = $GLOBALS["pdo"];
 $stmt = $pdo->prepare($sql_search_chat_id);
 $stmt->execute([$chat->getChatId()]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
