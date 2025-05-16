@@ -72,9 +72,9 @@ $chat = new \Daniilprusakov\TudaykaBot\Chat(
 $pdo = $GLOBALS["pdo"];
 $stmt = $pdo->prepare($sql_search_chat_id);
 $stmt->execute([$chat->getChatId()]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$userTelegram = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($user == false) {
+if ($userTelegram == false) {
     $stmt = $pdo->prepare($sql_insert_chat_id);
     $stmt->execute([
         'chat_id' => $chat->getChatId(),
@@ -86,7 +86,7 @@ if ($user == false) {
 
 
 
-if ($user["waiting_for_event"] == true) {
+if ($userTelegram["waiting_for_event"] == true) {
     if ($chat->getTextMessage() != "/add_event") {
         $stmt = $pdo->prepare($sql_insert_message);
         $stmt->execute([
