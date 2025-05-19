@@ -44,7 +44,10 @@ $sql_check_event_the_day = "
     WHERE chat_id = :chat_id 
     AND created_at >= CURRENT_DATE
 ";
-
+$sql_check_user_yougile = "
+    SELECT * FROM users_yougile
+    WHERE username_tg = :username_tg
+";
 
 
 
@@ -72,7 +75,7 @@ $chat = new \Daniilprusakov\TudaykaBot\Chat(
 $pdo = $GLOBALS["pdo"];
 $stmt = $pdo->prepare($sql_search_chat_id);
 $stmt->execute([$chat->getChatId()]);
-$userTelegram = $stmt->fetch(PDO::FETCH_ASSOC);
+$userTelegram = $stmt->fetch();
 
 if ($userTelegram == false) {
     $stmt = $pdo->prepare($sql_insert_chat_id);
@@ -114,6 +117,26 @@ if ($userTelegram["waiting_for_event"] == true) {
         'chat_id' => $chat->getChatId(),
         'now_event' => 0
     ]);
+} elseif ($chat->getTextMessage() == "/send_message") {
+    $stmt = $pdo->prepare($sql_check_user_yougile);
+    $stmt->execute(['username_tg'=>$chat->getUsername()]);
+    $userYG = $stmt->fetch();
+    var_dump($userYG);
+    if ($chat->getUsername() === $userYG["username_tg"]) {
+        $requestYg = new \Daniilprusakov\TudaykaBot\RequestYougile($userYG["auth_token"]);
+        $stmt = $pdo->prepare($sql_check_event_the_day);
+        $stmt->execute([
+            'chat_id' => $chat->getChatId()
+        ]);
+        $user_all_event = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $result_formatting = "";
+        foreach ($user_all_event as $key => $value) {
+            $result_formatting .= $key + 1 . ") " . $value . "\n";
+        }
+        $test_message = $requestYg->sendMessageYougile($userYG["chat_id"], "<b>Итоги дня:</b>\n$result_formatting");
+        var_dump($test_message);
+    }
+
 } elseif ($chat->getTextMessage() == "/check_the_day") {
     $stmt = $pdo->prepare($sql_check_event_the_day);
     $stmt->execute([
