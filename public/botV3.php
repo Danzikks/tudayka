@@ -129,12 +129,15 @@ if ($userTelegram["waiting_for_event"] == true) {
             'chat_id' => $chat->getChatId()
         ]);
         $user_all_event = $stmt->fetchAll(PDO::FETCH_COLUMN);
-        $result_formatting = "";
-        foreach ($user_all_event as $key => $value) {
-            $result_formatting .= $key + 1 . ") " . $value . "\n";
+        if (empty($user_all_event)) {
+            $requestApi->sendMessage($chat->getChatId(),"А ты что нибудь сделал за сегодня?");
+        } else {
+            $result_formatting = "";
+            foreach ($user_all_event as $key => $value) {
+                $result_formatting .= $key + 1 . ") " . $value . "\n";
+            }
+            $requestApi->sendMessage($chat->getChatId(),"<b>Итоги дня:</b>\n$result_formatting");
         }
-        $test_message = $requestYg->sendMessageYougile($userYG["chat_id"], "<b>Итоги дня:</b>\n$result_formatting");
-        var_dump($test_message);
     }
 
 } elseif ($chat->getTextMessage() == "/check_the_day") {
