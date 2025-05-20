@@ -136,7 +136,8 @@ if ($userTelegram["waiting_for_event"] == true) {
             foreach ($user_all_event as $key => $value) {
                 $result_formatting .= $key + 1 . ") " . $value . "\n";
             }
-            $requestApi->sendMessage($chat->getChatId(),"<b>Итоги дня:</b>\n$result_formatting");
+            $currentDate = date('d.m.Y');
+            $requestYg->sendMessageYougile($userYG["chat_id"], "$currentDate\n\nИтоги дня:\n$result_formatting");
         }
     }
 
