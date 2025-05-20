@@ -140,7 +140,6 @@ if ($userTelegram["waiting_for_event"] == true) {
             $requestYg->sendMessageYougile($userYG["chat_id"], "$currentDate\n\nИтоги дня:\n$result_formatting");
         }
     }
-
 } elseif ($chat->getTextMessage() == "/check_the_day") {
     $stmt = $pdo->prepare($sql_check_event_the_day);
     $stmt->execute([
