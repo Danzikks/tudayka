@@ -1,0 +1,37 @@
+body {
+    background-color: rgb(43, 45, 48);
+    font-family: 'Inter', sans-serif;
+}
+header {
+    background-color: rgb(30, 31, 34);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.navbar-brand {
+    border-radius: 15px;
+    display: flex;
+}
+
+.navbar {
+    display: flex;
+}
+
+.navbar-menu {
+    display: flex;
+    text-align: center;
+    gap: 20px;
+    list-style: none;
+}
+
+.navbar-menu>li>a {
+    color: rgb(220, 220, 220);
+    text-decoration: none;
+}
+
+
+.onboarding > h1 {
+    margin-top: 50px;
+    font-size: 35px;
+    text-align: center;
+    color: rgb(220, 220, 220);
+}
