@@ -28,10 +28,35 @@ header {
     text-decoration: none;
 }
 
+/*.onboarding {*/
+/*    gap: 30px;*/
+/*    padding: 20px;*/
+/*}*/
 
-.onboarding > h1 {
-    margin-top: 50px;
-    font-size: 35px;
+.onboarding-content {
+     display: flex;
+}
+
+.onboarding-title {
     text-align: center;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 50px;
+    padding: 15px 15px;
+    font-size: 35px;
     color: rgb(220, 220, 220);
+    background-color: rgb(30, 31, 34);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+}
+
+.onboarding-text {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    font-size: 20px;
+    color: rgb(220, 220, 220);
+}
+
+.onboarding-logo {
+    flex-shrink: 0;
+    border-radius: 100%;
 }
