@@ -28,20 +28,23 @@ header {
     text-decoration: none;
 }
 
-/*.onboarding {*/
-/*    gap: 30px;*/
-/*    padding: 20px;*/
-/*}*/
+.onboarding {
+    gap: 30px;
+    padding: 20px;
+    margin-right: auto;
+    margin-left: auto;
+}
 
 .onboarding-content {
      display: flex;
+    margin-top: 110px;
 }
 
 .onboarding-title {
     text-align: center;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 50px;
     padding: 15px 15px;
+    margin: auto;
     font-size: 35px;
     color: rgb(220, 220, 220);
     background-color: rgb(30, 31, 34);
@@ -54,6 +57,7 @@ header {
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     font-size: 20px;
     color: rgb(220, 220, 220);
+    margin-left: 20px;
 }
 
 .onboarding-logo {
