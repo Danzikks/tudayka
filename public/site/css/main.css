@@ -37,7 +37,7 @@ header {
 
 .onboarding-content {
     display: flex;
-    margin: auto;
+    margin: 80px auto;
     max-width: none;
     height: auto;
 }
