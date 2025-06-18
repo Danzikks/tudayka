@@ -3,7 +3,8 @@ vendor/
 .DS_Store
 bot.php
 *.log
-logo.png
 .idea
 .lingma
 test.php
+legacy/
+.continue
