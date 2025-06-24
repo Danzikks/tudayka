@@ -10,29 +10,9 @@
     <link rel="icon" type="image/png" href="assets/image/favicon.png">
     <link rel="stylesheet" href="assets/style.css">
 </head>
-<header>
-    <nav class="navbar navbar-expand-lg bg-blue shadow">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <img src="assets/image/transparent_logo.png" alt="Logo_transparent" class="img-fluid" width="50" height="50">
-                Tudayka
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Переключатель навигации">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/">Главная</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/about">Обо мне</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
+
+<?php require_once('incs/header.php') ?>
+
 <body class="bg-dark">
 <main>
 <div class="container text-white mt-4">
