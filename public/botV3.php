@@ -156,5 +156,5 @@ if ($userTelegram["waiting_for_event"] == true) {
         $requestApi->sendMessage($chat->getChatId(),"<b>Итоги дня:</b>\n$result_formatting");
     }
 } else {
-    var_dump($requestApi->sendMessage($chat->getChatId(), "Если хочешь добавить событие, то напиши /add_event"));
+    $requestApi->sendMessage($chat->getChatId(), "Если хочешь добавить событие, то напиши /add_event");
 }
