@@ -12,12 +12,21 @@ class RequestTelegram
         $this->token = $token;
     }
 
+    private array $keyboard = [
+        "keyboard" => [
+            [
+                ["text" => "Добавить событие"],
+                ["text" => "Проверить события за день"]
+            ]
+        ]
+    ];
     public function sendMessage(int $chatId, string $text): string
     {
         $params = [
             'chat_id' => $chatId,
             'text' => $text,
-            'parse_mode' => 'html'
+            'parse_mode' => 'html',
+            'reply_markup' => json_encode($this->keyboard)
         ];
         return file_get_contents($this->apiBaseUrl . $this->token . '/sendMessage?' . http_build_query($params));
 
