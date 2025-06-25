@@ -109,7 +109,7 @@ if ($userTelegram["waiting_for_event"] == true) {
     }
 } elseif ($chat->getTextMessage() == "/start") {
     $requestApi->sendMessage($chat->getChatId(),$commandStartText);
-} elseif ($chat->getTextMessage() == "/add_event") {
+} elseif ($chat->getTextMessage() == "Добавить событие") {
     $requestApi->sendMessage($chat->getChatId(),$commandAddEvent);
     $stmt = $pdo->prepare($sql_update_event_chat_id);
     $stmt->execute([
@@ -140,7 +140,7 @@ if ($userTelegram["waiting_for_event"] == true) {
             $requestYg->sendMessageYougile($userYG["chat_id"], "$currentDate\n\nИтоги дня:\n$result_formatting");
         }
     }
-} elseif ($chat->getTextMessage() == "/check_the_day") {
+} elseif ($chat->getTextMessage() == "Проверить события за день") {
     $stmt = $pdo->prepare($sql_check_event_the_day);
     $stmt->execute([
         'chat_id' => $chat->getChatId()
@@ -156,5 +156,5 @@ if ($userTelegram["waiting_for_event"] == true) {
         $requestApi->sendMessage($chat->getChatId(),"<b>Итоги дня:</b>\n$result_formatting");
     }
 } else {
-    $requestApi->sendMessage($chat->getChatId(), "Если хочешь добавить событие, то напиши /add_event");
+    var_dump($requestApi->sendMessage($chat->getChatId(), "Если хочешь добавить событие, то напиши /add_event"));
 }
