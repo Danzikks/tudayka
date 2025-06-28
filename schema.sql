@@ -1,4 +1,10 @@
-create table chats
+CREATE DATABASE IF NOT EXISTS tudayka_db
+    DEFAULT CHARACTER SET utf8mb4
+    COLLATE utf8mb4_general_ci;
+
+USE tudayka_db;
+
+CREATE TABLE IF NOT EXISTS chats
 (
     chat_id           bigint               not null
         primary key,
@@ -9,7 +15,7 @@ create table chats
 )
     collate = utf8mb4_general_ci;
 
-create table messages
+CREATE TABLE IF NOT EXISTS messages
 (
     id         int auto_increment
         primary key,
@@ -21,7 +27,7 @@ create table messages
 )
     collate = utf8mb4_general_ci;
 
-create table users_yougile
+CREATE TABLE IF NOT EXISTS users_yougile
 (
     id          int auto_increment
         primary key,
