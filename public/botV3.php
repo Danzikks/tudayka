@@ -59,10 +59,10 @@ $update = json_decode($request,true);
 //$fp = file_put_contents('request.log', $request);
 
 $token = $_ENV['BOT_TOKEN'];
-$requestApi = new \Daniilprusakov\TudaykaBot\RequestTelegram($token);
+$requestApi = new \Daniilprusakov\TudaykaBot\services\RequestTelegram($token);
 
 
-$chat = new \Daniilprusakov\TudaykaBot\Chat(
+$chat = new \Daniilprusakov\TudaykaBot\services\Chat(
     $update["message"]["from"]["username"],
     $update["message"]["chat"]["id"],
     $update["message"]["from"]["first_name"] ?? null,
@@ -123,7 +123,7 @@ if ($userTelegram["waiting_for_event"] == true) {
     $userYG = $stmt->fetch();
     var_dump($userYG);
     if ($chat->getUsername() === $userYG["username_tg"]) {
-        $requestYg = new \Daniilprusakov\TudaykaBot\RequestYougile($userYG["auth_token"]);
+        $requestYg = new \Daniilprusakov\TudaykaBot\services\RequestYougile($userYG["auth_token"]);
         $stmt = $pdo->prepare($sql_check_event_the_day);
         $stmt->execute([
             'chat_id' => $chat->getChatId()

@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="assets/style.css">
 </head>
 
-<?php require_once 'incs/header.php'?>
+<?php require_once 'incs/header.php' ?>
 
 <body class="bg-dark">
 <main>

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Daniilprusakov\TudaykaBot;
+namespace Daniilprusakov\TudaykaBot\services;
 
 
 class RequestTelegram
