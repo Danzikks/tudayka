@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
-
 require_once __DIR__ . '/../vendor/autoload.php';
-include_once("../database.php");
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->safeload();
+use Daniilprusakov\TudaykaBot\Database;
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 
 
@@ -72,7 +73,7 @@ $chat = new \Daniilprusakov\TudaykaBot\services\Chat(
     $update["update_id"]
 );
 
-$pdo = $GLOBALS["pdo"];
+$pdo = Database::getConnection();
 $stmt = $pdo->prepare($sql_search_chat_id);
 $stmt->execute([$chat->getChatId()]);
 $userTelegram = $stmt->fetch();
