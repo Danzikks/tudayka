@@ -1,8 +1,15 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/../vendor/autoload.php';
-use Daniilprusakov\TudaykaBot\Database;
+
+use Daniilprusakov\TudaykaBot\classes\Chat;
+use Daniilprusakov\TudaykaBot\classes\Db;
+use Daniilprusakov\TudaykaBot\classes\RequestTelegram;
+use Daniilprusakov\TudaykaBot\classes\RequestYougile;
 use Dotenv\Dotenv;
+
+require_once '../src/helpers/func.php';
+$configDb = require_once '../src/config/config_db.php';
 
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
@@ -21,7 +28,7 @@ $commandAddEvent = <<<TEXT
 TEXT;
 
 
-$sql_search_chat_id = "SELECT * FROM chats WHERE chat_id = ?";
+$sql_search_chat_id = "SELECT * FROM chats WHERE :chat_id";
 
 
 $sql_insert_chat_id = "
@@ -60,10 +67,10 @@ $update = json_decode($request,true);
 //$fp = file_put_contents('request.log', $request);
 
 $token = $_ENV['BOT_TOKEN'];
-$requestApi = new \Daniilprusakov\TudaykaBot\services\RequestTelegram($token);
+$requestApi = new RequestTelegram($token);
 
 
-$chat = new \Daniilprusakov\TudaykaBot\services\Chat(
+$chat = new Chat(
     $update["message"]["from"]["username"],
     $update["message"]["chat"]["id"],
     $update["message"]["from"]["first_name"] ?? null,
@@ -73,63 +80,56 @@ $chat = new \Daniilprusakov\TudaykaBot\services\Chat(
     $update["update_id"]
 );
 
-$pdo = Database::getConnection();
-$stmt = $pdo->prepare($sql_search_chat_id);
-$stmt->execute([$chat->getChatId()]);
-$userTelegram = $stmt->fetch();
+$db = new Db($configDb);
+$userTelegram = $db->query($sql_search_chat_id, ['chat_id' => $chat->getChatId()])->fetch();
+DD($userTelegram);
 
-if ($userTelegram == false) {
-    $stmt = $pdo->prepare($sql_insert_chat_id);
-    $stmt->execute([
+
+if (!$userTelegram) {
+    $db->query($sql_insert_chat_id,
+        [
         'chat_id' => $chat->getChatId(),
         'first_name' => $chat->getFirstName(),
         'last_name' => $chat->getLastName(),
         'username' => $chat->getUsername()
-    ]);
+        ]);
 }
 
 
 
-if ($userTelegram["waiting_for_event"] == true) {
-    if ($chat->getTextMessage() != "/add_event") {
-        $stmt = $pdo->prepare($sql_insert_message);
-        $stmt->execute([
+if ($userTelegram["waiting_for_event"] === true) {
+    if ($chat->getTextMessage() !== "Добавить событие") {
+        $db->query($sql_insert_message,
+            [
             'chat_id' => $chat->getChatId(),
             'text' => $chat->getTextMessage(),
             'date' => $chat->getDateMessage()
-        ]);
-        $stmt = $pdo->prepare($sql_update_event_chat_id);
-        $stmt->execute([
+            ]);
+        $db->query($sql_update_event_chat_id,
+            [
             'update_event' => 0,
             'chat_id' => $chat->getChatId(),
             'now_event' => 1
-        ]);
+            ]);
         $requestApi->sendMessage($chat->getChatId(),"Записал!📝");
     } else {
         $requestApi->sendMessage($chat->getChatId(),"Да-да, я уже записываю📝");
     }
-} elseif ($chat->getTextMessage() == "/start") {
+} elseif ($chat->getTextMessage() === "/start") {
     $requestApi->sendMessage($chat->getChatId(),$commandStartText);
-} elseif ($chat->getTextMessage() == "Добавить событие") {
+} elseif ($chat->getTextMessage() === "Добавить событие") {
     $requestApi->sendMessage($chat->getChatId(),$commandAddEvent);
-    $stmt = $pdo->prepare($sql_update_event_chat_id);
-    $stmt->execute([
+    $db->query($sql_update_event_chat_id,
+        [
         'update_event' => 1,
         'chat_id' => $chat->getChatId(),
         'now_event' => 0
-    ]);
-} elseif ($chat->getTextMessage() == "/send_message") {
-    $stmt = $pdo->prepare($sql_check_user_yougile);
-    $stmt->execute(['username_tg'=>$chat->getUsername()]);
-    $userYG = $stmt->fetch();
-    var_dump($userYG);
-    if ($chat->getUsername() === $userYG["username_tg"]) {
-        $requestYg = new \Daniilprusakov\TudaykaBot\services\RequestYougile($userYG["auth_token"]);
-        $stmt = $pdo->prepare($sql_check_event_the_day);
-        $stmt->execute([
-            'chat_id' => $chat->getChatId()
         ]);
-        $user_all_event = $stmt->fetchAll(PDO::FETCH_COLUMN);
+} elseif ($chat->getTextMessage() === "/send_message") {
+    $userYG = $db->query($sql_check_user_yougile, ['username_tg'=>$chat->getUsername()])->fetch();
+    if ($chat->getUsername() === $userYG["username_tg"]) {
+        $requestYg = new RequestYougile($userYG["auth_token"]);
+        $user_all_event = $db->query($sql_check_event_the_day, ['chat_id' => $chat->getChatId()])->fetchAll(PDO::FETCH_COLUMN);
         if (empty($user_all_event)) {
             $requestApi->sendMessage($chat->getChatId(),"А ты что нибудь сделал за сегодня?");
         } else {
@@ -141,14 +141,10 @@ if ($userTelegram["waiting_for_event"] == true) {
             $requestYg->sendMessageYougile($userYG["chat_id"], "$currentDate\n\nИтоги дня:\n$result_formatting");
         }
     }
-} elseif ($chat->getTextMessage() == "Проверить события за день") {
-    $stmt = $pdo->prepare($sql_check_event_the_day);
-    $stmt->execute([
-        'chat_id' => $chat->getChatId()
-    ]);
-    $user_all_event = $stmt->fetchAll(PDO::FETCH_COLUMN);
+} elseif ($chat->getTextMessage() === "Проверить события за день") {
+    $user_all_event = $db->query($sql_check_event_the_day, ['chat_id' => $chat->getChatId()])->fetchAll(PDO::FETCH_COLUMN);
     if (empty($user_all_event)) {
-         $requestApi->sendMessage($chat->getChatId(),"А ты что нибудь сделал за сегодня?");
+        $requestApi->sendMessage($chat->getChatId(),"А ты что нибудь сделал за сегодня?");
     } else {
         $result_formatting = "";
         foreach ($user_all_event as $key => $value) {
@@ -157,5 +153,5 @@ if ($userTelegram["waiting_for_event"] == true) {
         $requestApi->sendMessage($chat->getChatId(),"<b>Итоги дня:</b>\n$result_formatting");
     }
 } else {
-    $requestApi->sendMessage($chat->getChatId(), "Если хочешь добавить событие, то напиши /add_event");
+    $requestApi->sendMessage($chat->getChatId(), "Если хочешь добавить событие, то нажми на кнопку \"Добавить событие\"");
 }
